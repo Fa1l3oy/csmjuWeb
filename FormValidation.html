@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>ฟอร์มคำร้องขอโอนย้ายสาขาวิชา</title>
+  <style>
+    body { font-family: sans-serif; margin: 30px; background: #f9f9f9; }
+    form { background: #fff; padding: 20px; border-radius: 8px; max-width: 600px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .field { margin-bottom: 15px; }
+    .field label { display: block; font-weight: bold; margin-bottom: 5px; }
+    .field input, .field select, .field textarea {
+      width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;
+    }
+    .error { color: red; font-size: 0.9em; margin-top: 3px; }
+    button { padding: 10px 20px; background: #0066cc; color: white; border: none; border-radius: 4px; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+<form id="transferForm">
+  <h2>ฟอร์มคำร้องขอโอนย้ายสาขาวิชา</h2>
+
+  <div class="field">
+    <label>ชื่อ-นามสกุล</label>
+    <input type="text" id="fullname" />
+    <div class="error" id="fullnameError"></div>
+  </div>
+
+  <div class="field">
+    <label>รหัสนักศึกษา</label>
+    <input type="text" id="studentId" maxlength="10" />
+    <div class="error" id="studentIdError"></div>
+  </div>
+
+  <div class="field">
+    <label>สาขาวิชาเดิม</label>
+    <select id="oldMajor">
+      <option value="">-- เลือก --</option>
+      <option value="CS">วิทยาการคอมพิวเตอร์</option>
+      <option value="IT">เทคโนโลยีสารสนเทศ</option>
+    </select>
+    <div class="error" id="oldMajorError"></div>
+  </div>
+
+  <div class="field">
+    <label>คณะเดิม</label>
+    <select id="oldFaculty">
+      <option value="">-- เลือก --</option>
+      <option value="Science">วิทยาศาสตร์</option>
+      <option value="Engineering">วิศวกรรมศาสตร์</option>
+    </select>
+    <div class="error" id="oldFacultyError"></div>
+  </div>
+
+  <div class="field">
+    <label>สาขาวิชาใหม่</label>
+    <select id="newMajor">
+      <option value="">-- เลือก --</option>
+      <option value="CS">วิทยาการคอมพิวเตอร์</option>
+      <option value="Robotics">หุ่นยนต์</option>
+    </select>
+    <div class="error" id="newMajorError"></div>
+  </div>
+
+  <div class="field">
+    <label>คณะใหม่</label>
+    <select id="newFaculty">
+      <option value="">-- เลือก --</option>
+      <option value="Engineering">วิศวกรรมศาสตร์</option>
+      <option value="Science">วิทยาศาสตร์</option>
+    </select>
+    <div class="error" id="newFacultyError"></div>
+  </div>
+
+  <div class="field">
+    <label>เหตุผลในการขอโอนย้าย</label>
+    <textarea id="reason" rows="4"></textarea>
+    <div class="error" id="reasonError"></div>
+  </div>
+
+  <div class="field">
+    <label><input type="checkbox" id="confirm" /> ข้าพเจ้ายืนยันว่าข้อมูลถูกต้อง</label>
+    <div class="error" id="confirmError"></div>
+  </div>
+
+  <button type="submit">ส่งคำร้อง</button>
+</form>
+
+<script>
+  document.getElementById("transferForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    let valid = true;
+
+    const fullname = document.getElementById("fullname").value.trim();
+    const studentId = document.getElementById("studentId").value.trim();
+    const oldMajor = document.getElementById("oldMajor").value;
+    const oldFaculty = document.getElementById("oldFaculty").value;
+    const newMajor = document.getElementById("newMajor").value;
+    const newFaculty = document.getElementById("newFaculty").value;
+    const reason = document.getElementById("reason").value.trim();
+    const confirm = document.getElementById("confirm").checked;
+
+    // Reset error messages
+    document.querySelectorAll(".error").forEach(e => e.textContent = "");
+
+    if (fullname === "") {
+      document.getElementById("fullnameError").textContent = "กรุณากรอกชื่อ-นามสกุล";
+      valid = false;
+    }
+
+    if (!/^\d{10}$/.test(studentId)) {
+      document.getElementById("studentIdError").textContent = "กรอกรหัสนักศึกษา 10 หลัก";
+      valid = false;
+    }
+
+    if (oldMajor === "") {
+      document.getElementById("oldMajorError").textContent = "กรุณาเลือกสาขาวิชาเดิม";
+      valid = false;
+    }
+
+    if (oldFaculty === "") {
+      document.getElementById("oldFacultyError").textContent = "กรุณาเลือกคณะเดิม";
+      valid = false;
+    }
+
+    if (newMajor === "") {
+      document.getElementById("newMajorError").textContent = "กรุณาเลือกสาขาวิชาใหม่";
+      valid = false;
+    }
+
+    if (newFaculty === "") {
+      document.getElementById("newFacultyError").textContent = "กรุณาเลือกคณะใหม่";
+      valid = false;
+    }
+
+    if (reason.length < 10) {
+      document.getElementById("reasonError").textContent = "กรุณากรอกเหตุผลอย่างน้อย 10 ตัวอักษร";
+      valid = false;
+    }
+
+    if (!confirm) {
+      document.getElementById("confirmError").textContent = "กรุณายืนยันความถูกต้องของข้อมูล";
+      valid = false;
+    }
+
+    if (valid) {
+      alert("ส่งคำร้องเรียบร้อยแล้ว!");
+      // สามารถส่งข้อมูลต่อไปยัง Server ได้ที่นี่
+    }
+  });
+</script>
+
+</body>
+</html>
