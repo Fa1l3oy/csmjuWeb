@@ -102,7 +102,7 @@
       // ถ้า VIP หรือ Premium ต้องไม่เกิน 2 ใบ
       const selectedType = ticketType.value;
       if ((selectedType === "VIP" || selectedType === "Premium") && count > 2) {
-        countError.textContent = `ประเภท ${selectedType} จำกัดสูงสุด 2 ใบ`;
+        countError.textContent = `ประเภทของ ${selectedType} จำกัดสูงสุด 2 ใบ`;
         valid = false;
       }
 
